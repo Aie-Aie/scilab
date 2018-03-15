@@ -1,56 +1,71 @@
-clc;
 
+clc; 
 
-// STEP 3 get the value of the function if variable x is given
-
-function [fval] = getfunctionval(x)
-    fval = evstr(fstr)
+function [fval]=getfunctionval(x)
+    fval=evstr(fstr)
+    //fval=(cos(10*x*(%pi/180))+sin(27*(%pi/180)))
+    
 endfunction
 
-
-function [xr] =bisection(xl,xu)
-    xr=(xl+xu)/2
+function[midval]= getmidpoint(lowerx, upperx)
+    midval=(upperx+lowerx)/2
 endfunction
 
-// STEP 1 enter a function
+function[prodval]=getproductofinterval(xl, xu)
+    funcprot(0);
+    prodval=xl*xu
+endfunction
+
+function [pererror]=getpercenterror(newmid, oldmid)
+    pererror=abs((newmid-oldmid)/newmid)*100
+endfunction
+
+product=1
 
 fstr=input("enter a function of x:", "s")
+while product>=0 do
+        
+    lowerx= input("Input lower interval: ")
+    upperx= input("Input upper interval: ")
+  //getvalue of function  
+    xl=getfunctionval(lowerx)
+    xu=getfunctionval(upperx)
+  
+  //get f(xl)*f(xu)
+    product=getproductofinterval(xl, xu)
 
-// STEP 2 enter upper bound and lower bound
-
-xl=input("enter lower interval xl: ")
-xu=input("enter upper interval xu: ")
-
-// input number of iterations
-
-iter =input("Number of iterations: ")
-n=0
-
-mprintf("%s\t%s\t%s\t%s\t\t%s\t\t%s\t\t%s\n", "iter", "lowerval", "upperval", "root", "f(xl)", "f(xu)", "f(xr)")
-
-while iter >= 1
     
-    lowervalue = getfunctionval(xl)
-    uppervalue = getfunctionval(xu)
-    xr = bisection(xl, xu)
-    rootvalue = getfunctionval(xr)
-    
-    n= n+1   
-    mprintf("%d\t%d\t\t%d\t\t%f\t%f\t%f\t%f\n",n, xl, xu, xr, lowervalue, uppervalue, rootvalue)
-    if (lowervalue * uppervalue)<0 then
-        xu = xr
-        xl = xl
-        elseif (lowervalue * uppervalue)> 0 then
-                xu =xu
-                xl = xr
-                
-                break;
-
-    end
-    
-    iter = iter -1
-    
-     
 end
+
+
+
+
+//get xroot  
+//interval value: 10 to 20; 50 to 60; 80:90
+pererror=100        //initialization for percent error 
+iter=1
+printf("Iter\t\tLower x\t\tUpper x\t\tRoot\t\tError\n")
+mprintf("%d\t\t%f\t%f\t%f\n", iter, lowerx, upperx, getmidpoint(lowerx, upperx))
+
+while pererror >0.001 do
+    
+  
+    funcval=getfunctionval(getmidpoint(lowerx, upperx ))
+    prodval =getproductofinterval(xl, funcval)
+    iter=iter+1
+    if prodval<0 then
+        upperx=getmidpoint(lowerx, upperx )
+    elseif prodval>0 then
+        lowerx=getmidpoint(lowerx, upperx )
+    else
+        disp("Root is the midpoint")
+    end
+   
+    pererror=getpercenterror(upperx, lowerx)
+    mprintf("%d\t\t%f\t%f\t%f\t%f\n", iter, lowerx, upperx, getmidpoint(lowerx, upperx ), pererror)
+   
+end
+
+printf("\nThe root is %f", getmidpoint(lowerx, upperx ))
 
 
